@@ -1,0 +1,22 @@
+@import "../../common/color_variables.scss";
+
+@mixin center-item {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.custom_container {
+  position: relative;
+  margin-left: 0;
+  margin-right: 0;
+  @include center-item;
+}
+
+.image_format {
+  position: relative;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  width: 100%;
+}

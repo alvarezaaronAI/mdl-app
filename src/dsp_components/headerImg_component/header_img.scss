@@ -1,0 +1,119 @@
+@import "../../common/color_variables.scss";
+
+// .header-container {
+//   position: relative;
+//   left: 0;
+//   top: 0;
+// }
+
+.headerImage {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100vh;
+  left: 50%;
+  transform: translateX(-50%);
+  background-size: cover;
+  object-fit: cover;
+  background-position: 50%;
+  // background-attachment: fixed;
+  background-repeat: no-repeat;
+  z-index: -1;
+}
+
+.amazon_dsp_banner {
+  position: absolute;
+  height: 467px;
+  width: 83vw;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin-left: 0;
+  margin-right: 0;
+  z-index: -1;
+  // background-color: $base_blue;
+}
+
+.amazon_dsp_banner::before {
+  content: "";
+  position: absolute;
+  top: inherit;
+  left: inherit;
+  transform: inherit;
+  width: inherit;
+  height: 467px;
+  background-color: $base_blue;
+  opacity: 0.5;
+}
+
+.row {
+  position: relative;
+  height: 100%;
+  // background-color: $base_blue;
+}
+
+.title_container {
+  position: relative;
+  height: 100%;
+}
+
+.center_dsp_banner_content {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#dsp_banner_text {
+  font-weight: bold;
+  font-size: 1.65rem;
+  color: $base_white;
+  text-align: left;
+}
+#dsp_title {
+  font-size: 50px;
+  color: $base_white;
+}
+
+@media (max-width: 1200px) {
+  .container {
+    max-width: 1600px;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  #dsp_title {
+    font-size: 36px;
+    color: $base_white;
+  }
+
+  #dsp_banner_text {
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-align: left;
+  }
+}
+
+@media (max-width: 940px) {
+  #dsp_banner_text {
+    font-weight: bold;
+    font-size: 22px;
+    text-align: left;
+  }
+}
+
+@media (max-width: 767px) {
+  .amazon_dsp_banner::before {
+    height: 525px;
+  }
+
+  #dsp_title {
+    top: 20%;
+    font-size: 30px;
+  }
+
+  #dsp_banner_text {
+    top: -30%;
+    text-align: center;
+    font-size: 1rem;
+  }
+}

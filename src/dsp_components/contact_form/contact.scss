@@ -1,0 +1,156 @@
+@import "../../common/color_variables.scss";
+
+@mixin center-horizontally {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@mixin input-styling {
+  background-color: $base_blue;
+  border: 1px solid black;
+
+  &::placeholder {
+    color: white;
+  }
+
+  &:focus {
+    color: white;
+  }
+}
+
+.contact_section {
+  position: relative;
+  @include center-horizontally;
+  background-color: green;
+  width: 66vw;
+  height: 650px;
+}
+
+#contact_img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+#form-container {
+  position: absolute;
+  width: 75%;
+  height: auto;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  > h3 {
+    color: $base_white;
+    font-size: 2em;
+    font-weight: bold;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: $base_red;
+    left: inherit;
+    top: inherit;
+    transform: inherit;
+    z-index: -1;
+    opacity: 0.75;
+    border-radius: 5px;
+  }
+}
+textarea[type="text"] {
+  color: white;
+}
+
+input[type="text"],
+input[type="email"] {
+  color: white;
+}
+
+#inputName {
+  @include input-styling;
+}
+
+#inputEmail {
+  @include input-styling;
+}
+
+#messageInput {
+  @include input-styling;
+}
+
+#contact_info_block {
+  position: relative;
+  width: 85%;
+  height: auto;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  > h3 {
+    color: white;
+    font-size: 2.5rem;
+    font-weight: bold;
+  }
+
+  > p {
+    color: white;
+    font-size: 1.375rem;
+    width: 85%;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    display: block;
+    width: inherit;
+    height: 100%;
+    background-color: #676767;
+    border-radius: 5px;
+    opacity: 0.75;
+    z-index: -1;
+  }
+}
+
+#contact-submit {
+  position: relative;
+  width: 150px;
+  height: 80px;
+  background-color: black;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 2em;
+  font-weight: bold;
+}
+
+@media (max-width: 991px) {
+}
+
+@media (max-width: 767px) {
+  .contact_section {
+    width: 100vw;
+  }
+
+  #contact_info_block {
+    top: 25%;
+    width: 100%;
+
+    > h3 {
+      font-size: 1.8rem;
+    }
+  }
+
+  #form-container {
+    top: 0;
+    width: 100%;
+
+    &::before {
+      //   display: none;
+      top: 50%;
+    }
+  }
+}
