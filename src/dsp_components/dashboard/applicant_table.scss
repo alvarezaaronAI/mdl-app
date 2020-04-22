@@ -1,0 +1,49 @@
+@mixin centerItem {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.row {
+  margin: 0;
+}
+
+.table {
+  position: absolute;
+  width: 85vw;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 15px;
+  z-index: -1;
+  background-color: white;
+}
+
+.applicant_name,
+.applicant_email {
+  font-size: 1.5rem;
+}
+
+.pending {
+  color: blue;
+}
+
+.hired {
+  color: green;
+}
+
+.denied {
+  color: red;
+}
+
+.edit_row {
+  animation: tr_expanded 0.6s linear forwards;
+}
+
+@keyframes tr_expanded {
+  from {
+    height: 49px;
+  }
+  to {
+    height: 100px;
+  }
+}
