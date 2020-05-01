@@ -1,0 +1,9 @@
+tr {
+  transition: height 2s;
+}
+
+.row_active {
+  height: 125px;
+  background-color: rgb(71, 227, 255);
+  transition: height 2s;
+}

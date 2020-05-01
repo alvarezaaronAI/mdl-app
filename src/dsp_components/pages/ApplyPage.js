@@ -53,6 +53,7 @@ const ApplyPage = () => {
             <hr />
             <h3 className="blog-post-title text-left">Location</h3>
             <p className="mx-5 text-left">City of Commerce</p>
+            <p className="mx-5 text-left">5829 Smithway St, 90040</p>
             <hr />
 
             <h3 className="blog-post-title text-left">

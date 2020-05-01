@@ -18,7 +18,7 @@ export default function Footer() {
               <h3>Careers</h3>
               <ul>
                 <li>
-                  <Link to="/careers">Last Mile Delivery</Link>
+                  <Link to="/apply">Last Mile Delivery</Link>
                 </li>
               </ul>
             </div>
