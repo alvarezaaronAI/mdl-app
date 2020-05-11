@@ -23,29 +23,15 @@ const btn_style = {
 };
 
 const JobModal = (props) => {
-  const {
-    position,
-    datePosted,
-    description,
-    responsibilities,
-    experience,
-    education,
-    physicalDemands,
-    requiredLicense,
-    workAuthorizationRequirements,
-  } = props.jobListing;
-
   const [modal, setModal] = useState(false);
-  const [edit_position, setPosition] = useState(position);
-  const [edit_description, setDescription] = useState(description);
-  const [edit_duties, setDuties] = useState(responsibilities);
-  const [edit_experience, setExperience] = useState(experience);
-  const [edit_education, setEducation] = useState(education);
-  const [edit_physicalDemands, setPhysicalDemands] = useState(physicalDemands);
-  const [edit_requiredLicense, setRequiredLicense] = useState(requiredLicense);
-  const [edit_workAuthorization, setWorkAuthorization] = useState(
-    workAuthorizationRequirements
-  );
+  const [edit_position, setPosition] = useState("");
+  const [edit_description, setDescription] = useState("");
+  const [edit_duties, setDuties] = useState([]);
+  const [edit_experience, setExperience] = useState([]);
+  const [edit_education, setEducation] = useState([]);
+  const [edit_physicalDemands, setPhysicalDemands] = useState([]);
+  const [edit_requiredLicense, setRequiredLicense] = useState([]);
+  const [edit_workAuthorization, setWorkAuthorization] = useState([]);
 
   const populateInputFields = (inputList, name) => {
     let inputFields = [];
@@ -108,34 +94,61 @@ const JobModal = (props) => {
 
   const toggle = () => setModal(!modal);
 
-  //Need to update firebase based on values changed upon closing the modal
-  const toggleUpdate = () => {
-    let updated_data = {
-      position: edit_position,
-      description: edit_description,
-      education: edit_education,
-      experience: edit_experience,
-      physicalDemands: edit_physicalDemands,
-      requiredLicense: edit_requiredLicense,
-      responsibilities: edit_duties,
-      work_authorization: edit_workAuthorization,
-    };
+  //Returns error array
+  const validateInputs = () => {
+    let errors = [];
 
-    async function updateJobPost() {
-      await firebase
-        .firestore()
-        .collection("jobListings")
-        .doc(edit_position)
-        .set(updated_data, { merge: true })
-        .then((completed) => {
-          setModal(!modal);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    if (edit_position.length <= 0) {
+      errors.push("position is required");
+    }
+    if (edit_description.length <= 0) {
+      errors.push("description is required");
     }
 
-    updateJobPost();
+    return errors;
+  };
+
+  //Need to update firebase based on values changed upon closing the modal
+  const postJob = () => {
+    let errors = validateInputs();
+
+    if (errors.length > 0) {
+      errors.forEach((err) => {
+        alert(err);
+      });
+    } else {
+      let current_date = getDate();
+      let current_time = getTime();
+
+      let new_job = {
+        datePosted: current_date,
+        timePosted: current_time,
+        position: edit_position,
+        description: edit_description,
+        education: edit_education,
+        experience: edit_experience,
+        physicalDemands: edit_physicalDemands,
+        requiredLicense: edit_requiredLicense,
+        responsibilities: edit_duties,
+        work_authorization: edit_workAuthorization,
+      };
+
+      async function addJobToFirebase() {
+        await firebase
+          .firestore()
+          .collection("jobListings")
+          .doc(edit_position)
+          .set(new_job)
+          .then((complete) => {
+            setModal(!modal);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+
+      addJobToFirebase();
+    }
   };
 
   let dutiesInputs = populateInputFields(edit_duties, "duty");
@@ -148,7 +161,7 @@ const JobModal = (props) => {
   return (
     <div>
       <Button color="info" onClick={toggle} style={btn_style}>
-        View
+        Add Job
       </Button>
       <Modal isOpen={modal} toggle={toggle} className="bg-success">
         <ModalHeader toggle={toggle}>Edit Job Post</ModalHeader>
@@ -267,13 +280,27 @@ const JobModal = (props) => {
             Delete
           </Button>
 
-          <Button color="primary" onClick={toggleUpdate}>
-            Update
+          <Button color="primary" onClick={postJob}>
+            Post Job
           </Button>
         </ModalFooter>
       </Modal>
     </div>
   );
+};
+
+const getDate = () => {
+  const todayDate = new Date();
+  //months start at 0
+  let month = todayDate.getMonth() + 1;
+  let day = todayDate.getUTCDate();
+  let year = todayDate.getUTCFullYear();
+  return `${month}/${day}/${year}`;
+};
+
+const getTime = () => {
+  let now = new Date();
+  return now.getTime();
 };
 
 export default JobModal;

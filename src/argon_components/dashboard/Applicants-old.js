@@ -1,4 +1,4 @@
-import React, { useEffect, useState, render } from "react";
+import React, { useEffect, useState } from "react";
 
 import firebase from "../../firebase.js";
 import { Redirect } from "react-router";
@@ -20,6 +20,177 @@ import ApplicantModal from "./ApplicantModal";
 import "../dashboard_styling/applicant_table.scss";
 import ThreeDotsWaveAnimation from "../../common/loading_animation/ThreeDotsWave";
 
+function GetApplicants() {
+  const [applicants, setApplicants] = useState([]);
+
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection("applicants")
+      .get()
+      .then((snapshot) => {
+        const applicant = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setApplicants(applicant);
+      });
+  }, []);
+
+  return applicants;
+}
+
+const DummyApplicants = () => {
+  let applicants = [
+    {
+      firstName: "John",
+      lastName: "Doe",
+      email: "johndoe@email.com",
+      applied: "4/24/2020",
+      id: 1,
+      status: {
+        pending: true,
+        denied: false,
+        hired: false,
+      },
+    },
+    {
+      firstName: "Jane",
+      lastName: "Doe",
+      email: "janedoe@email.com",
+      applied: "4/24/2020",
+      id: 2,
+      status: {
+        pending: true,
+        denied: false,
+        hired: false,
+      },
+    },
+    {
+      firstName: "Scat",
+      lastName: "Man",
+      email: "scatman@email.com",
+      applied: "4/24/2020",
+      id: 3,
+      status: {
+        pending: true,
+        denied: false,
+        hired: false,
+      },
+    },
+    {
+      firstName: "John",
+      lastName: "Doe",
+      email: "johndoe@email.com",
+      applied: "4/24/2020",
+      id: 4,
+      status: {
+        pending: true,
+        denied: false,
+        hired: false,
+      },
+    },
+    {
+      firstName: "Jane",
+      lastName: "Doe",
+      email: "janedoe@email.com",
+      applied: "4/24/2020",
+      id: 5,
+      status: {
+        pending: true,
+        denied: false,
+        hired: false,
+      },
+    },
+    {
+      firstName: "Scat",
+      lastName: "Man",
+      email: "scatman@email.com",
+      applied: "4/24/2020",
+      id: 6,
+      status: {
+        pending: true,
+        denied: false,
+        hired: false,
+      },
+    },
+    {
+      firstName: "John",
+      lastName: "Doe",
+      email: "johndoe@email.com",
+      applied: "4/24/2020",
+      id: 7,
+      status: {
+        pending: true,
+        denied: false,
+        hired: false,
+      },
+    },
+    {
+      firstName: "Jane",
+      lastName: "Doe",
+      email: "janedoe@email.com",
+      applied: "4/24/2020",
+      id: 8,
+      status: {
+        pending: true,
+        denied: false,
+        hired: false,
+      },
+    },
+    {
+      firstName: "Scat",
+      lastName: "Man",
+      email: "scatman@email.com",
+      applied: "4/24/2020",
+      id: 9,
+      status: {
+        pending: true,
+        denied: false,
+        hired: false,
+      },
+    },
+    {
+      firstName: "John",
+      lastName: "Doe",
+      email: "johndoe@email.com",
+      applied: "4/24/2020",
+      id: 10,
+      status: {
+        pending: true,
+        denied: false,
+        hired: false,
+      },
+    },
+    {
+      firstName: "Jane",
+      lastName: "Doe",
+      email: "janedoe@email.com",
+      applied: "4/24/2020",
+      id: 11,
+      status: {
+        pending: true,
+        denied: false,
+        hired: false,
+      },
+    },
+    {
+      firstName: "Scat",
+      lastName: "Man",
+      email: "scatman@email.com",
+      applied: "4/24/2020",
+      id: 12,
+      status: {
+        pending: true,
+        denied: false,
+        hired: false,
+      },
+    },
+  ];
+
+  return applicants;
+};
+
 const setActiveLink = (index) => {
   let elements = document.getElementsByClassName("active");
 
@@ -32,60 +203,31 @@ const setActiveLink = (index) => {
 };
 
 const checkStatus = (status_obj) => {
-  let result = false,
-    key;
+  let result = false;
 
   for (key in status_obj) {
     if (status_obj[key] == true) {
       result = key;
     }
   }
-
   return result;
-};
-
-const styledCell = (key) => {
-  //create cell with styling depending on key
-
-  switch (key) {
-    case "pending":
-      return <td className="status_cell status_cell_pending">{key}</td>;
-    case "hired":
-      return <td className="status_cell status_cell_hired">{key}</td>;
-    case "denied":
-      return <td className="status_cell status_cell_denied">{key}</td>;
-    default:
-      break;
-  }
 };
 
 const Applicants = () => {
   const [applicantList, setApplicants] = useState([]);
-  const [limtedList, setLimitedList] = useState([]);
-  const [paginationLinks, setPaginationLinks] = useState(null);
-  const [paginateLength, setPaginateLength] = useState(10);
+  const [paginationLinks, setPaginationLinks] = useState([]);
+  const [paginateLength, setPaginateLength] = useState(5);
 
-  useEffect(() => {
-    async function fetchApplicants() {
-      await firebase
-        .firestore()
-        .collection("applicants")
-        .orderBy("timeApplied", "desc")
-        .get()
-        .then((snapshot) => {
-          const applicant = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          setApplicants(applicant);
-          setLimitedList(applicant.slice(0, paginateLength));
-          createPaginationLinks(applicant, paginateLength);
-        })
-        .catch((err) => console.log(err));
+  //Will be call to firebase api
+  const applicantPromise = new Promise((resolve, reject) => {
+    try {
+      setTimeout(() => {
+        resolve(DummyApplicants());
+      }, 2000);
+    } catch (error) {
+      reject("Error retrieving applicant data");
     }
-
-    fetchApplicants();
-  }, []);
+  });
 
   const tablePagination = (
     list,
@@ -101,7 +243,7 @@ const Applicants = () => {
     }
 
     let limited_list = [...list.slice(start_index, end_index)];
-    setLimitedList(limited_list);
+    setApplicants(limited_list);
   };
 
   //Length specifies scope of each pagination
@@ -147,26 +289,16 @@ const Applicants = () => {
     setPaginationLinks(pagination_links);
   };
 
-  const updateStatus = (email, status_obj) => {
-    let key;
-    let obj_keys = [];
-
-    for (let ii = 0; ii < applicantList.length; ii++) {
-      if (applicantList[ii].id == email) {
-        let old_status = checkStatus(applicantList[ii].status);
-        applicantList[ii].status = status_obj;
-        let classReference = document.getElementsByClassName("status_cell")[ii];
-        classReference.innerHTML = checkStatus(status_obj);
-
-        classReference.classList.replace(
-          `status_cell_${old_status}`,
-          `status_cell_${checkStatus(status_obj)}`
-        );
-      }
-    }
-
-    setApplicants(applicantList);
-  };
+  useEffect(() => {
+    applicantPromise
+      .then((data) => {
+        setApplicants(data.slice(0, 5));
+        createPaginationLinks(data, paginateLength);
+      })
+      .catch((error) => {
+        console.log("Error retrieving applicants");
+      });
+  }, []);
 
   return (
     <>
@@ -186,13 +318,12 @@ const Applicants = () => {
                     <th scope="col">Position</th>
                     <th scope="col">Date Applied</th>
                     <th scope="col">Status</th>
-                    <th scope="col">Action</th>
                     {/* <th scope="col" /> */}
                   </tr>
                 </thead>
                 <tbody id="applicant_table">
-                  {limtedList.length > 0 ? (
-                    limtedList.map((person, key) => (
+                  {applicantList.length > 0 ? (
+                    applicantList.map((person, key) => (
                       <tr id={key + 1}>
                         <td>
                           <h5>{person.firstName + " " + person.lastName}</h5>
@@ -201,17 +332,13 @@ const Applicants = () => {
                           <h5>{person.email}</h5>
                         </td>
                         <td>
-                          <h5>{person.position}</h5>
+                          <h5>{checkStatus(person.status)}</h5>
                         </td>
                         <td>
-                          <h5>{person.dateApplied}</h5>
+                          <h5>{person.applied}</h5>
                         </td>
-                        {styledCell(checkStatus(person.status))}
                         <td>
-                          <ApplicantModal
-                            profile={person}
-                            updateStatus={updateStatus}
-                          />
+                          <ApplicantModal profile={person} />
                         </td>
                       </tr>
                     ))

@@ -10,7 +10,7 @@
   position: relative;
   display: block;
   width: 100%;
-  height: 100vh;
+  height: 70vh;
   left: 50%;
   transform: translateX(-50%);
   background-size: cover;
@@ -65,7 +65,7 @@
 
 #dsp_banner_text {
   font-weight: bold;
-  font-size: 1.65rem;
+  font-size: 1.45rem;
   color: $base_white;
   text-align: left;
 }
@@ -93,10 +93,11 @@
   }
 }
 
-@media (max-width: 940px) {
+@media (max-width: 1000px) {
   #dsp_banner_text {
     font-weight: bold;
-    font-size: 22px;
+    top: 200px;
+    font-size: 1.15rem;
     text-align: left;
   }
 }

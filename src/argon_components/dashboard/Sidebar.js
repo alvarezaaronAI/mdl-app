@@ -74,7 +74,7 @@ const Sidebar = () => {
                   to={"/dashboard/applicants"}
                   tag={NavLinkRRD}
                   onClick={() => {
-                    console.log("wow");
+                    console.log("");
                   }}
                   activeClassName="active">
                   <i className="ni ni-single-02 text-yellow" />
@@ -87,7 +87,7 @@ const Sidebar = () => {
                   to={"/dashboard/messages"}
                   tag={NavLinkRRD}
                   onClick={() => {
-                    console.log("wow");
+                    console.log("");
                   }}
                   activeClassName="active">
                   <i className="ni ni-bullet-list-67 text-red" />
@@ -100,7 +100,7 @@ const Sidebar = () => {
                   to={"/dashboard/job-listings"}
                   tag={NavLinkRRD}
                   onClick={() => {
-                    console.log("wow");
+                    console.log("");
                   }}
                   activeClassName="active">
                   <i className="ni ni-bullet-list-67 text-blue" />

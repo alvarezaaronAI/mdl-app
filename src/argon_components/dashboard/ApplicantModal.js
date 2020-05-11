@@ -15,8 +15,28 @@ const btn_style = {
   padding: "0.3rem 1.7rem",
 };
 
-const ModalExample = (props) => {
-  const { firstName, lastName, email, applied, status } = props.profile;
+const UpdateApplicantStatus = (email, obj) => {
+  async function updateDocument() {
+    await firebase
+      .firestore()
+      .collection("applicants")
+      .doc(email)
+      .set({ status: obj }, { merge: true })
+      .catch((error) => console.log(error));
+  }
+
+  updateDocument();
+};
+
+const ApplicantModal = (props) => {
+  const {
+    firstName,
+    lastName,
+    email,
+    applied,
+    status,
+    position,
+  } = props.profile;
 
   const [modal, setModal] = useState(false);
   const [pendingStatus, setPendingStatus] = useState(status.pending);
@@ -25,34 +45,55 @@ const ModalExample = (props) => {
 
   const toggle = () => setModal(!modal);
 
+  //Only one option can be selected at a time.
+  const updateStatus = (status) => {
+    switch (status) {
+      case "pending":
+        setPendingStatus(!pendingStatus);
+        setDeniedStatus(false);
+        setHiredStatus(false);
+        break;
+      case "hired":
+        setHiredStatus(!hiredStatus);
+        setPendingStatus(false);
+        setDeniedStatus(false);
+
+        break;
+      case "denied":
+        setDeniedStatus(!deniedStatus);
+        setPendingStatus(false);
+        setHiredStatus(false);
+        break;
+    }
+  };
+
   //Need to update firebase based on values changed upon closing the modal
   const toggleUpdate = () => {
     let updatedStatus = {
-      pending: true,
-      denied: false,
-      hired: false,
+      pending: pendingStatus,
+      denied: deniedStatus,
+      hired: hiredStatus,
     };
 
-    // let applicant = firebase
-    //   .firestore()
-    //   .collection("applicants")
-    //   .doc(String(email));
+    UpdateApplicantStatus(email, updatedStatus);
+    props.updateStatus(email, updatedStatus);
 
-    // applicant.update({ status: updatedStatus });
     setModal(!modal);
   };
 
-  //   const deleteDoc = () => {
-  //     let applicant = firebase
-  //       .firestore()
-  //       .collection("applicants")
-  //       .orderBy()
-  //       .doc(String(email));
-
-  //     applicant.delete();
-
-  //     setModal(!modal);
-  //   };
+  const deleteDocument = () => {
+    async function deleteApplicant() {
+      await firebase
+        .firestore()
+        .collection("applicants")
+        .doc(String(email))
+        .delete()
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+    deleteApplicant();
+  };
 
   return (
     <div>
@@ -64,6 +105,7 @@ const ModalExample = (props) => {
         <ModalBody>
           <h5>Email: {email}</h5>
           <h5>Applied: {applied}</h5>
+          <h5>Position: {position}</h5>
           <h5>Applicant Status:</h5>
           <Table>
             <tbody>
@@ -76,7 +118,7 @@ const ModalExample = (props) => {
                     id="pending_check"
                     checked={pendingStatus}
                     onChange={() => {
-                      console.log("checked");
+                      updateStatus("pending");
                     }}
                   />
                   <label
@@ -93,7 +135,7 @@ const ModalExample = (props) => {
                     id="hired_check"
                     checked={hiredStatus}
                     onChange={() => {
-                      console.log("checked");
+                      updateStatus("hired");
                     }}
                   />
                   <label
@@ -110,7 +152,7 @@ const ModalExample = (props) => {
                     id="denied_check"
                     checked={deniedStatus}
                     onChange={() => {
-                      console.log("checked");
+                      updateStatus("denied");
                     }}
                   />
                   <label
@@ -122,7 +164,7 @@ const ModalExample = (props) => {
           </Table>
         </ModalBody>
         <ModalFooter className="justify-content-between">
-          <Button color="danger" onClick={"deleteDoc"}>
+          <Button color="danger" onClick={deleteDocument}>
             Delete
           </Button>
 
@@ -135,4 +177,4 @@ const ModalExample = (props) => {
   );
 };
 
-export default ModalExample;
+export default ApplicantModal;

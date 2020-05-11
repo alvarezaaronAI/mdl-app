@@ -15,6 +15,8 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./assets/argon_assets/scss/argon-dashboard-react.scss";
 import "./argon_components/dashboard_styling/admin_nav.scss";
 
+import firebaseTest from "./argon_components/dashboard/firebaseTest";
+
 function App() {
   return (
     <FirebaseAuthProvider>
@@ -26,6 +28,8 @@ function App() {
           <Route path="/login" component={LoginPage} />
           {/* <Route path="/dashboard/applicants" component={Dashboard} /> */}
           <Route path="/dashboard" component={Dashboard} />
+          <Route path="/test" component={firebaseTest} />
+          {/* <Redirect from="*" to="/" /> */}
         </Switch>
       </BrowserRouter>
     </FirebaseAuthProvider>

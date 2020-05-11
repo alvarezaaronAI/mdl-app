@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import firebase from "../../firebase.js";
 
 // reactstrap components
 import {
@@ -16,7 +15,6 @@ import {
 } from "reactstrap";
 import "../dashboard_styling/messages_table.scss";
 import MessageModal from "./MessageModal";
-
 import ThreeDotsWaveAnimation from "../../common/loading_animation/ThreeDotsWave";
 
 const DummyMessages = () => {
@@ -165,30 +163,19 @@ const setActiveLink = (index) => {
 
 const Messages = () => {
   const [messageList, setMessages] = useState([]);
-  const [limtedList, setLimitedList] = useState([]);
   const [paginationLinks, setPaginationLinks] = useState([]);
   const [paginateLength, setPaginateLength] = useState(5);
 
-  useEffect(() => {
-    async function fetchMessages() {
-      await firebase
-        .firestore()
-        .collection("messages")
-        .get()
-        .then((snapshot) => {
-          const messages = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          setMessages(messages);
-          setLimitedList(messages.slice(0, paginateLength));
-          createPaginationLinks(messages, paginateLength);
-        })
-        .catch((err) => console.log(err));
+  //Will be call to firebase api
+  const messagePromise = new Promise((resolve, reject) => {
+    try {
+      setTimeout(() => {
+        resolve(DummyMessages());
+      }, 2000);
+    } catch (error) {
+      reject("Error retrieving message data");
     }
-
-    fetchMessages();
-  }, []);
+  });
 
   const tablePagination = (
     list,
@@ -204,7 +191,7 @@ const Messages = () => {
     }
 
     let limited_list = [...list.slice(start_index, end_index)];
-    setLimitedList(limited_list);
+    setMessages(limited_list);
   };
 
   //Length specifies scope of each pagination
@@ -251,6 +238,17 @@ const Messages = () => {
     setPaginationLinks(pagination_links);
   };
 
+  useEffect(() => {
+    messagePromise
+      .then((data) => {
+        setMessages(data.slice(0, 5));
+        createPaginationLinks(data, paginateLength);
+      })
+      .catch((error) => {
+        console.log("Error retrieving applicants");
+      });
+  }, []);
+
   return (
     <>
       <Container className="mt--7 " fluid>
@@ -276,11 +274,11 @@ const Messages = () => {
                 </thead>
                 <tbody></tbody>
                 <tbody>
-                  {limtedList.length > 0 ? (
-                    limtedList.map((message, key) => (
+                  {messageList.length > 0 ? (
+                    messageList.map((message, key) => (
                       <tr>
                         <td>
-                          <h5>{message.name}</h5>
+                          <h5>{message.firstName + " " + message.lastName}</h5>
                         </td>
                         <td>
                           <h5>{message.email}</h5>

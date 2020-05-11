@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import firebase from "../../firebase.js";
 import { Redirect } from "react-router-dom";
@@ -45,15 +45,18 @@ const AdminNavbar = () => {
         setRedirect(true);
       })
       .catch((error) => {
-        console.log("error occurred", error);
+        console.log("error occurred");
       });
   };
 
   return (
     <>
-      {redirect ? <Redirect to="/" /> : null}
+      {redirect ? <Redirect exact to="/" /> : null}
       <Navbar className="admin_nav" expand="md">
         {/* <NavbarToggler onClick={toggle} expand /> */}
+        <NavItem>
+          <Button onClick={logout}>Logout</Button>
+        </NavItem>
         <Collapse isOpen={isOpen}>
           <Nav navbar>
             <Container>

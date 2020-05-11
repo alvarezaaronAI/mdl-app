@@ -1,8 +1,40 @@
-import React from "react";
-import { Card, CardHeader, Container, Row, Table, Button } from "reactstrap";
+import React, { useEffect, useState } from "react";
+import {
+  Card,
+  CardHeader,
+  CardFooter,
+  Container,
+  Row,
+  Table,
+  Button,
+  Pagination,
+  PaginationItem,
+  PaginationLink,
+} from "reactstrap";
 import JobModal from "./JobModal";
+import AddJobModal from "./AddJobModal";
 
 import "../dashboard_styling/job_listings.scss";
+import ThreeDotsWaveAnimation from "../../common/loading_animation/ThreeDotsWave";
+import firebase from "../../firebase";
+
+const GetJobListings = () => {
+  const [listings, setListings] = useState([]);
+
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection("jobListings")
+      .get()
+      .then((snapshot) => {
+        const jobPost = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setListings(jobPost);
+      });
+  }, []);
+};
 
 const DummyJobListings = () => {
   let listings = [
@@ -49,7 +81,7 @@ const DummyJobListings = () => {
       position: "Dispatcher",
       datePosted: "4/28/2020",
       description:
-        "The Dispatcher is responsible for effectively routing daily customerappointments among field personnel, manage technician routes andworkload within designated timeframes utilizing computerized workforcemanagement applications.",
+        "The Dispatcher is responsible for effectively routing daily customer appointments among field personnel, manage technician routes andworkload within designated timeframes utilizing computerized workforcemanagement applications.",
       responsibilities: [
         "Provide client information to drivers through the Nextel system.",
         "Communicate with drivers in a professional manner on and off their mobile devices.",
@@ -78,7 +110,106 @@ const DummyJobListings = () => {
 };
 
 const JobListings = () => {
-  let jobs = DummyJobListings();
+  // let jobs = DummyJobListings();
+
+  const [jobList, setJobs] = useState([]);
+  const [limitedList, setLimitedList] = useState([]);
+  const [paginationLinks, setPaginationLinks] = useState([]);
+  const [paginateLength, setPaginateLength] = useState(5);
+
+  useEffect(() => {
+    async function fetchJobs() {
+      await firebase
+        .firestore()
+        .collection("jobListings")
+        .get()
+        .then((snapshot) => {
+          const jobs = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setJobs(jobs);
+          setLimitedList(jobs.slice(0, paginateLength));
+          createPaginationLinks(jobs, paginateLength);
+        })
+        .catch((err) => console.log(err));
+    }
+
+    fetchJobs();
+  }, []);
+
+  const tablePagination = (
+    list,
+    start_index,
+    paginate_index,
+    paginate_length
+  ) => {
+    let end_index = 0;
+
+    end_index = paginate_index * paginate_length;
+    if (end_index > list.length) {
+      end_index = list.length;
+    }
+
+    let limited_list = [...list.slice(start_index, end_index)];
+    setLimitedList(limited_list);
+  };
+
+  const setActiveLink = (index) => {
+    let elements = document.getElementsByClassName("active");
+
+    for (let ii = 0; ii < elements.length; ii++) {
+      elements[0].className = elements[0].className.replace("active", "");
+    }
+
+    let current_active_element = document.getElementsByClassName("page-item");
+    current_active_element[index].classList.add("active");
+  };
+
+  //Length specifies scope of each pagination
+  const createPaginationLinks = (item_list, length) => {
+    if (item_list == null) {
+      return null;
+    }
+    let pagination_items = 0;
+    let pagination_links = [];
+
+    //create an extra link when items are not perfectly divisible by the specified length
+    if (item_list.length % length > 0) {
+      pagination_items = Math.floor(item_list.length / length + 1);
+    } else {
+      pagination_items = Math.floor(item_list.length / length);
+    }
+
+    for (
+      let current_iteration = 0, starting_index = 0;
+      current_iteration < pagination_items;
+      current_iteration++, starting_index += length
+    ) {
+      pagination_links.push(
+        <PaginationItem>
+          <PaginationLink
+            onClick={(e) => {
+              e.preventDefault();
+
+              tablePagination(
+                item_list,
+                starting_index,
+                current_iteration + 1,
+                paginateLength
+              );
+              setActiveLink(current_iteration);
+            }}>
+            {current_iteration + 1}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
+
+    setPaginationLinks(pagination_links);
+  };
+
+  const addJob = () => {};
 
   return (
     <>
@@ -87,9 +218,16 @@ const JobListings = () => {
         <Row>
           <div className="col">
             <Card className="shadow">
-              <CardHeader className="border-0">
-                <h3 className="mb-0">Job Listings</h3>
-              </CardHeader>
+              <Container>
+                <Row className="d-flex justify-content-between">
+                  <CardHeader className="border-0">
+                    <h3 className="mb-0">Job Listings</h3>
+                  </CardHeader>
+
+                  <AddJobModal></AddJobModal>
+                </Row>
+              </Container>
+
               <Table
                 className="align-items-center table-flush table-striped"
                 responsive>
@@ -104,29 +242,43 @@ const JobListings = () => {
                 </thead>
                 <tbody></tbody>
                 <tbody>
-                  {jobs.map((job) => (
+                  {limitedList.length > 0 ? (
+                    limitedList.map((job) => (
+                      <tr>
+                        <td>
+                          <h5>{job.position}</h5>
+                        </td>
+                        <td>
+                          <h5>{job.datePosted}</h5>
+                        </td>
+                        <td class="message_cell">
+                          <p>
+                            {job.description.length > 100
+                              ? job.description.slice(0, 100) + "..."
+                              : job.description}
+                          </p>
+                        </td>
+                        <td>
+                          <JobModal jobListing={job}></JobModal>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
                     <tr>
-                      <td>
-                        <h5>{job.position}</h5>
-                      </td>
-                      <td>
-                        <h5>{job.datePosted}</h5>
-                      </td>
-                      <td class="message_cell">
-                        <p>
-                          {job.description.length > 100
-                            ? (job.description =
-                                job.description.slice(0, 100) + "...")
-                            : job.description}
-                        </p>
-                      </td>
-                      <td>
-                        <JobModal jobListing={job}></JobModal>
-                      </td>
+                      <ThreeDotsWaveAnimation />
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </Table>
+              <CardFooter className="py-4">
+                <nav aria-label="...">
+                  <Pagination
+                    className="pagination justify-content-end mb-0"
+                    listClassName="justify-content-end mb-0">
+                    {paginationLinks !== null ? paginationLinks.slice() : null}
+                  </Pagination>
+                </nav>
+              </CardFooter>
             </Card>
           </div>
         </Row>

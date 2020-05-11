@@ -6,6 +6,7 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
+  Media,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
@@ -20,6 +21,7 @@ import {
   NavLink,
 } from "react-router-dom";
 import "./dsp_navbar.scss";
+import logo from "../../assets/logo/mdl_sm.png";
 
 const DSP_Nav = (props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -44,6 +46,7 @@ const DSP_Nav = (props) => {
             </NavItem>
           </Nav>
           <NavbarBrand href="/">Metro Deliveries and Logistics</NavbarBrand>
+          <Media object src={logo} alt="MDL_LOGO"></Media>
         </Collapse>
       </Navbar>
     </div>
