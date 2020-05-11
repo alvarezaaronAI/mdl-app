@@ -30,7 +30,7 @@ const DSPDriverCard = () => {
             </p>
             <div className="col-lg-12">
               <div className="apply_button">
-                <Link className="apply_button_text" to="/apply">
+                <Link className="apply_button_text" to="/careers">
                   Apply
                   {/* <p className="apply_button_text">Apply Today!</p> */}
                 </Link>

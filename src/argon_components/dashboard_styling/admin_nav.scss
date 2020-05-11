@@ -1,0 +1,46 @@
+#dashboard_link {
+  color: black;
+}
+
+.bg-gradient-AdminNav {
+  background: linear-gradient(269deg, #11cdef, #0953ea, #1dd9b9);
+  background-size: 600% 600%;
+
+  -webkit-animation: AdminNavGradient 46s ease infinite;
+  -moz-animation: AdminNavGradient 46s ease infinite;
+  animation: AdminNavGradient 46s ease infinite;
+
+  @-webkit-keyframes AdminNavGradient {
+    0% {
+      background-position: 0% 44%;
+    }
+    50% {
+      background-position: 100% 57%;
+    }
+    100% {
+      background-position: 0% 44%;
+    }
+  }
+  @-moz-keyframes AdminNavGradient {
+    0% {
+      background-position: 0% 44%;
+    }
+    50% {
+      background-position: 100% 57%;
+    }
+    100% {
+      background-position: 0% 44%;
+    }
+  }
+  @keyframes AdminNavGradient {
+    0% {
+      background-position: 0% 44%;
+    }
+    50% {
+      background-position: 100% 57%;
+    }
+    100% {
+      background-position: 0% 44%;
+    }
+  }
+}

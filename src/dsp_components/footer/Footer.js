@@ -20,14 +20,14 @@ export default function Footer() {
                 <li>
                   <Link to="/careers">Last Mile Delivery</Link>
                 </li>
+                <li>
+                  <Link to="/careers">Dispatch</Link>
+                </li>
               </ul>
             </div>
             <div className="col-sm-6 col-md-3 item">
               <h3>About</h3>
               <ul>
-                <li>
-                  <Link to="/">Company</Link>
-                </li>
                 <li>
                   <Link to="/login">Login</Link>
                 </li>

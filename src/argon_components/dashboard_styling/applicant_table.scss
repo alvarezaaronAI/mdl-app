@@ -1,0 +1,28 @@
+tr {
+  transition: height 2s;
+}
+
+.row_active {
+  height: 125px;
+  background-color: rgb(71, 227, 255);
+  transition: height 2s;
+}
+
+.status_cell {
+  font-size: 1.2em !important;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.status_cell_pending {
+  font-size: 2em;
+  color: rgb(38, 125, 224);
+}
+
+.status_cell_hired {
+  color: rgb(16, 206, 73);
+}
+
+.status_cell_denied {
+  color: rgb(221, 71, 12);
+}

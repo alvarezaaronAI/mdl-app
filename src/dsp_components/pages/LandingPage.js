@@ -4,7 +4,7 @@ import HeaderSection from "../headerImg_component/HeaderImg";
 import Footer from "../footer/Footer";
 import MainContent from "../main_content/MainContent";
 import mainImage from "../../assets/logistics_1.jpg";
-// import "../../App.css";
+import "../../App.css";
 
 const LandingPage = () => {
   return (

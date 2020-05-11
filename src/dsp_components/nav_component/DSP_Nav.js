@@ -6,6 +6,7 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
+  Media,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
@@ -19,7 +20,8 @@ import {
   Link,
   NavLink,
 } from "react-router-dom";
-import "./navbar.scss";
+import "./dsp_navbar.scss";
+import logo from "../../assets/logo/mdl_sm.png";
 
 const DSP_Nav = (props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,22 +30,23 @@ const DSP_Nav = (props) => {
 
   return (
     <div>
-      <Navbar color="light" light expand="md">
+      <Navbar className="bg-nav" expand="md">
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="mr-auto" navbar>
             <NavItem>
-              <NavLink className="px-3" to="/">
+              <NavLink id="dsp_nav" className="px-3" to="/">
                 Home
               </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink className="px-3" to="/apply">
+              <NavLink id="dsp_nav" className="px-3" to="/careers">
                 Careers
               </NavLink>
             </NavItem>
           </Nav>
           <NavbarBrand href="/">Metro Deliveries and Logistics</NavbarBrand>
+          <Media object src={logo} alt="MDL_LOGO"></Media>
         </Collapse>
       </Navbar>
     </div>

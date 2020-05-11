@@ -1,0 +1,24 @@
+.grid {
+  position: absolute;
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(1, 8rem);
+  grid-auto-rows: 8rem;
+  // border: 2px solid black;
+  justify-items: center;
+  align-items: center;
+  left: 40%;
+  top: 40%;
+  // transform: translate(-50%);
+}
+
+.loading-box {
+  position: relative;
+  width: calc(100% - 1rem);
+  height: calc(100% - 1rem);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // left: 100%;
+  // border: 2px solid black;
+}

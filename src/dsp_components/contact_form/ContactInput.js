@@ -9,35 +9,64 @@ const ContactInput = () => {
 
   const ref = useRef();
 
-  function onSubmit(e) {
+  function OnSubmit(e) {
     e.preventDefault();
     let current_date = getDate();
+    let current_time = getTime();
     ref.current.toggle();
 
-    firebase
-      .firestore()
-      .collection("messages")
-      .doc(email)
-      .set({
-        name,
-        email,
-        sent: current_date,
-        message,
-      })
-      .then(() => {
-        setName("");
-        setEmail("");
-        setMessage("");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (!name || !email || !message) {
+      alert("Some fields were left blank");
+      return;
+    } else {
+      async function sendMessage() {
+        await firebase
+          .firestore()
+          .collection("messages")
+          .doc(email)
+          .set({
+            name,
+            email,
+            sent: current_date,
+            timeApplied: current_time,
+            message,
+          })
+          .then(() => {
+            setName("");
+            setEmail("");
+            setMessage("");
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+      sendMessage();
+    }
+
+    // firebase
+    //   .firestore()
+    //   .collection("messages")
+    //   .doc(email)
+    //   .set({
+    //     name,
+    //     email,
+    //     sent: current_date,
+    //     message,
+    //   })
+    //   .then(() => {
+    //     setName("");
+    //     setEmail("");
+    //     setMessage("");
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   }
 
   return (
     <div id="form-container" className="container">
       <h3 className="text-left">Contact Us</h3>
-      <form onSubmit={onSubmit} id="contact-form">
+      <form onSubmit={OnSubmit} id="contact-form">
         <div className="row">
           <div className="form-group col-lg-12">
             <label for="inputName"></label>
@@ -103,6 +132,11 @@ const getDate = () => {
   let day = todayDate.getUTCDate();
   let year = todayDate.getUTCFullYear();
   return `${month}/${day}/${year}`;
+};
+
+const getTime = () => {
+  let now = new Date();
+  return now.getTime();
 };
 
 export default ContactInput;
